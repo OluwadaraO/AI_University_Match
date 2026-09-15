@@ -1,6 +1,8 @@
 import uuid
 
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+
 from app.database import Base
 
 
@@ -32,4 +34,10 @@ class Student(Base):
     education_level = Column(
         String,
         nullable=False,
+    )
+
+    academic_credentials = relationship(
+    "AcademicCredential",
+    back_populates="student",
+    cascade="all, delete-orphan",
     )
