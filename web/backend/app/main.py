@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db
 
 from app.database import engine, Base
-from app.models import (Student, AcademicCredential, AcademicResult,)
+from app.models import (Student, AcademicCredential, AcademicResult, )
 from app.schemas import (StudentCreate, StudentResponse, AcademicCredentialCreate, AcademicCredentialResponse,)
+from app.validators import validate_nigerian_credential
 app = FastAPI()
 
 Base.metadata.create_all(bind=engine)
@@ -46,6 +47,19 @@ def create_academic_credential(
             status_code=404,
             detail="Student not found",
         )
+
+    if student.country.lower() == "nigeria":
+        try:
+            validate_nigerian_credential(
+                db,
+                credential.credential_type,
+                credential.results,
+            )
+        except ValueError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=str(error),
+            )
 
     new_credential = AcademicCredential(
         student_id=student.id,
