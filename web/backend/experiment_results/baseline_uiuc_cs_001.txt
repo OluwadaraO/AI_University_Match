@@ -1,0 +1,30 @@
+(.venv) PS C:\Users\daras\Documents\AI_University_Match_For_Students\web\backend> python -m app.experiments.test_ai_baseline
+AI METHOD 1: BASIC LLM BASELINE
+==================================================
+Student country: Nigeria
+Credential: WAEC
+Results: ['Mathematics: A1']
+University: University of Illinois Urbana-Champaign
+Program: Computer Science
+
+BASELINE AI RESPONSE
+--------------------------------------------------
+**No, not based on the information provided.** 
+
+### Reasoning:
+1. **Incomplete Academic Profile:** UIUC requires completion of a full secondary school curriculum. For Nigerian applicants, this means presenting the complete West African Senior School Certificate Examination (WASSCE) showing grades in at least 5–6 relevant academic subjects, including English Language and core sciences (such as Physics and Chemistry), not just a single subject.
+2. **Extreme Competitiveness of UIUC Computer Science:** Computer Science in the Grainger College of Engineering at UIUC is one of the most competitive programs in the world (with an acceptance rate typically below 10%). Successful applicants generally present top-tier marks (mostly A1s) across all STEM subjects, strong English proficiency, and evidence of rigorous coursework (such as Further Mathematics, if available). 
+
+While an **A1 in Mathematics** is an excellent and vital start for a CS applicant, a decision cannot be made without the student's full WASSCE results and overall secondary school transcripts.
+
+
+Basic LLM baseline
+Executed
+
+
+Model: Gemini 3.8 Flash
+Student: Nigeria, WAEC Mathematics A1
+University: UIUC — Computer Science
+AI response: "No, not based on the information provided."
+Deterministic result: UNKNOWN
+Observation: The baseline introduced specific admissions claims without supplied source evidence.

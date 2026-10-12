@@ -1,0 +1,44 @@
+AI METHOD 2: SOURCE-GROUNDED AI
+==================================================
+Student country: Nigeria
+Credential: WAEC
+Results: ['Mathematics: A1']
+University: University of Illinois Urbana-Champaign
+Program: Computer Science
+
+RETRIEVED REQUIREMENTS
+--------------------------------------------------
+Requirement ID: 2
+Requirement type: coursework
+Applicant country: Nigeria
+Credential type: General
+Subject: Mathematics
+Requirement level: required
+Minimum grade: Not specified
+Minimum years: 3.5
+Minimum course level: Trigonometry or higher
+Source title: UIUC First-Year Requirements
+Source URL: https://www.admissions.illinois.edu/first-year-requirements/
+Verified date: 2026-10-05
+
+GROUNDED AI RESPONSE
+--------------------------------------------------
+### Academic Preparation Assessment
+
+**Evaluation Status: UNKNOWN**
+
+Based solely on the verified requirements provided, it cannot be fully determined whether the student meets the academic coursework requirement.
+
+---
+
+### Requirement Verification Breakdown
+
+* **Subject (Mathematics):** **Verified.** The student has presented WAEC results in Mathematics.
+* **Minimum Grade (Not specified):** **Verified.** The student holds a grade of A1, and no minimum grade threshold was specified.
+* **Minimum Years (3.5 years):** **UNKNOWN.** The student's record shows a final WAEC examination grade, but does not provide transcripts or documentation indicating the total years of high school coursework completed. As instructed, WAEC grades cannot be assumed equivalent to US coursewor
+* **Minimum Course Level (Trigonometry or higher):** **UNKNOWN.** The listing indicates general "Mathematics," but the available information does not confirm whether the curriculum covered Trigonometry or higher.
+
+---
+
+*Note: Fulfilling academic prerequisites represents academic matching only and does not constitute a guarantee of admission.*
+(.venv) PS C:\Users\daras\Documents\AI_University_Match_For_Students\web\backend> python -m app.experiments.test_ai_grounded

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db
 
 from app.database import engine, Base
-from app.models import (Student, AcademicCredential, AcademicResult, )
+from app.models import (Student, AcademicCredential, AcademicResult, University, Program, AdmissionRequirement, AdmissionSource, AdmissionSubjectRequirement)
 from app.schemas import (StudentCreate, StudentResponse, AcademicCredentialCreate, AcademicCredentialResponse,)
 from app.validators import validate_nigerian_credential
 app = FastAPI()
@@ -60,7 +60,11 @@ def create_academic_credential(
                 status_code=400,
                 detail=str(error),
             )
-
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Academic credential validation is not supported for {student.country}",
+        )
     new_credential = AcademicCredential(
         student_id=student.id,
         country=student.country,
