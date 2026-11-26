@@ -7,3 +7,4 @@ from app.models.program import Program
 from app.models.admission_requirement import AdmissionRequirement
 from app.models.admission_subject_requirement import AdmissionSubjectRequirement
 from app.models.admission_source import AdmissionSource
+from app.models.user import User

@@ -1,0 +1,66 @@
+[
+  {
+    "university": "University of Illinois Urbana-Champaign",
+    "program": "Computer Science",
+    "applicant_country": "Nigeria",
+    "credential_type": null,
+    "requirement_type": "coursework",
+    "subject_requirements": [
+      {
+        "subject": "Mathematics",
+        "requirement_level": "required",
+        "minimum_grade": null,
+        "minimum_years": 3.5,
+        "minimum_course_level": "Trigonometry or higher"
+      }
+    ],
+    "sources": [
+      {
+        "source_title": "UIUC First-Year Requirements",
+        "source_url": "https://www.admissions.illinois.edu/first-year-requirements/",
+        "verified_date": "2026-11-25",
+        "evidence_text": "Applicants to Grainger College of Engineering majors must complete at least 3.5 years of mathematics, including trigonometry or a higher course level.",
+        "admission_cycle": null
+      }
+    ]
+  },
+  {
+    "university": "Western Kentucky University",
+    "program": null,
+    "applicant_country": "Nigeria",
+    "credential_type": "WAEC",
+    "requirement_type": "aggregate_academic",
+    "minimum_credit_count": 5,
+    "minimum_credit_grade": "C6",
+    "minimum_percentage": 75.0,
+    "subject_requirements": [],
+    "sources": [
+      {
+        "source_title": "WKU Admission Requirements for Students Educated in Nigeria",
+        "source_url": "https://www.wku.edu/international/documents/nigeria.pdf",
+        "verified_date": "2026-11-25",
+        "evidence_text": "First-time freshmen need at least five WASSCE credit passes in the A1-C6 range and a secondary-level academic subject average of at least 75 percent. Higher requirements may apply.",
+        "admission_cycle": null
+      }
+    ]
+  },
+  {
+    "university": "West Virginia University",
+    "program": null,
+    "applicant_country": "Nigeria",
+    "credential_type": "WAEC",
+    "requirement_type": "aggregate_academic",
+    "minimum_gpa": 2.5,
+    "gpa_scale": 4.0,
+    "subject_requirements": [],
+    "sources": [
+      {
+        "source_title": "WVU Admission Requirements for Nigeria",
+        "source_url": "https://www.wvu.edu/admissions/undergraduate/how-to-apply/international-students/admission-requirements-for-international-students/nigeria/",
+        "verified_date": "2026-11-25",
+        "evidence_text": "WVU evaluates Nigerian freshman applicants using a converted GPA threshold of 2.5 on a four-point scale. WASSCE results are reviewed, and certain majors may require a higher GPA.",
+        "admission_cycle": null
+      }
+    ]
+  }
+]

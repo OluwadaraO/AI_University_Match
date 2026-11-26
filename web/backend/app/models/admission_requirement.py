@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -41,6 +41,31 @@ class AdmissionRequirement(Base):
     requirement_type = Column(
         String,
         nullable=False,
+    )
+
+    minimum_credit_count = Column(
+    Integer,
+    nullable=True,
+)
+
+    minimum_credit_grade = Column(
+        String,
+        nullable=True,
+    )
+
+    minimum_gpa = Column(
+        Float,
+        nullable=True,
+    )
+
+    gpa_scale = Column(
+        Float,
+        nullable=True,
+    )
+
+    minimum_percentage = Column(
+        Float,
+        nullable=True,
     )
 
     university = relationship(

@@ -1,9 +1,33 @@
+
 from pydantic import BaseModel, EmailStr, field_validator
 
-class StudentCreate(BaseModel):
-    email: EmailStr
-    country: str
+
+class StudentAcademicBackground(BaseModel):
     education_level: str
+
+    @field_validator("education_level")
+    @classmethod
+    def validate_education_level(cls, education_level: str):
+        education_level = education_level.strip().lower()
+
+        supported_levels = {
+            "ss1": "SS1",
+            "ss2": "SS2",
+            "ss3": "SS3",
+            "graduated": "Graduated",
+        }
+
+        if education_level not in supported_levels:
+            raise ValueError(
+                "Unsupported education level. "
+                "Supported levels: SS1, SS2, SS3, Graduated"
+            )
+
+        return supported_levels[education_level]
+
+
+class StudentCreate(StudentAcademicBackground):
+    country: str
 
     @field_validator("country")
     @classmethod
@@ -20,6 +44,12 @@ class StudentCreate(BaseModel):
             )
 
         return supported_countries[country]
+
+
+class StudentUpdate(StudentAcademicBackground):
+    model_config = {
+        "extra": "forbid"
+    }
 
 
 class StudentResponse(BaseModel):

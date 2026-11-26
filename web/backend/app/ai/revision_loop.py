@@ -1,10 +1,9 @@
 
 from dataclasses import dataclass
 
-from app.ai.client import client
+from app.ai.generation import generate_text
 from app.ai.verification import verify_assessment
 
-MODEL = "gemini-3.8-flash"
 MAX_REVISIONS = 2
 
 
@@ -64,11 +63,7 @@ Explanation: Briefly explain the decision.
     if initial_assessment is not None:
         assessment = initial_assessment
     else:
-        response = client.interactions.create(
-            model=MODEL,
-            input=prompt,
-        )
-        assessment = response.output_text
+        assessment = generate_text(prompt)
 
     if not assessment:
         raise ValueError("Gemini returned an empty response.")
@@ -130,18 +125,8 @@ Evaluation Status: SATISFIED, NOT_SATISFIED, or UNKNOWN
 Explanation: Briefly explain the decision.
 """
 
-        revised_response = client.interactions.create(
-            model=MODEL,
-            input=revision_prompt,
-        )
-
-        if not revised_response.output_text:
-            raise ValueError(
-                "Gemini returned an empty revised response."
-            )
-
-        assessment = revised_response.output_text
-        revisions += 1
+    assessment = generate_text(revision_prompt)
+    revisions += 1
 
     final_verification = verify_assessment(
         assessment=assessment,

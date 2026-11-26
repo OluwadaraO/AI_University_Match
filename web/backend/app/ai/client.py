@@ -6,6 +6,8 @@ from google import genai
 
 load_dotenv()
 
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:

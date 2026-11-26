@@ -47,7 +47,6 @@ def get_verified_requirements(
 def format_requirements_for_ai(
     requirements: list[AdmissionRequirement],
 ) -> str:
-    """Convert sourced database requirements into AI context."""
 
     if not requirements:
         return "NO VERIFIED REQUIREMENTS AVAILABLE"
@@ -60,15 +59,20 @@ def format_requirements_for_ai(
             f"Requirement type: {requirement.requirement_type}",
             f"Applicant country: {requirement.applicant_country}",
             f"Credential type: {requirement.credential_type or 'General'}",
+            f"Minimum credits: {requirement.minimum_credit_count}",
+            f"Minimum credit grade: {requirement.minimum_credit_grade}",
+            f"Minimum GPA: {requirement.minimum_gpa}",
+            f"GPA scale: {requirement.gpa_scale}",
+            f"Minimum percentage: {requirement.minimum_percentage}",
         ]
 
         for subject in requirement.subject_requirements:
             lines.extend([
                 f"Subject: {subject.subject}",
                 f"Requirement level: {subject.requirement_level}",
-                f"Minimum grade: {subject.minimum_grade or 'Not specified'}",
-                f"Minimum years: {subject.minimum_years if subject.minimum_years is not None else 'Not specified'}",
-                f"Minimum course level: {subject.minimum_course_level or 'Not specified'}",
+                f"Minimum grade: {subject.minimum_grade}",
+                f"Minimum years: {subject.minimum_years}",
+                f"Minimum course level: {subject.minimum_course_level}",
             ])
 
         for source in requirement.sources:
@@ -76,6 +80,8 @@ def format_requirements_for_ai(
                 f"Source title: {source.source_title}",
                 f"Source URL: {source.source_url}",
                 f"Verified date: {source.verified_date}",
+                f"Evidence: {source.evidence_text}",
+                f"Admission cycle: {source.admission_cycle}",
             ])
 
         sections.append("\n".join(lines))

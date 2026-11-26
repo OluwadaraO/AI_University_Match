@@ -1,4 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    Date,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -33,6 +40,16 @@ class AdmissionSource(Base):
     verified_date = Column(
         Date,
         nullable=False,
+    )
+
+    evidence_text = Column(
+    Text,
+    nullable=True,
+    )
+
+    admission_cycle = Column(
+        String,
+        nullable=True,
     )
 
     admission_requirement = relationship(

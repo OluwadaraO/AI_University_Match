@@ -10,51 +10,36 @@ WAEC_GRADE_RANK = {
     "F9": 9,
 }
 
+
 def meets_waec_minimum_grade(student_grade, minimum_grade):
-    student_rank = WAEC_GRADE_RANK.get(student_grade.upper())
-    minimum_rank = WAEC_GRADE_RANK.get(minimum_grade.upper())
+    if not student_grade or not minimum_grade:
+        return None
+
+    student_rank = WAEC_GRADE_RANK.get(
+        student_grade.strip().upper()
+    )
+    minimum_rank = WAEC_GRADE_RANK.get(
+        minimum_grade.strip().upper()
+    )
 
     if student_rank is None or minimum_rank is None:
         return None
 
     return student_rank <= minimum_rank
 
+
 def match_subject_requirement(student_result, requirement):
     if student_result is None:
         return {
-            "status": "NOT_SATISFIED",
+            "status": "UNKNOWN",
             "reason": (
-                f"Student does not have a result for "
+                f"No academic result was provided for "
                 f"{requirement.subject}."
             ),
         }
 
-    # If the requirement depends on information that the student's
-    # academic result does not contain, we cannot safely determine
-    # whether the requirement is satisfied.
-    if requirement.minimum_years is not None:
-        return {
-            "status": "UNKNOWN",
-            "reason": (
-                f"The requirement specifies at least "
-                f"{requirement.minimum_years} years of "
-                f"{requirement.subject}, but the student's academic "
-                f"result does not include years of coursework."
-            ),
-        }
+    checks = []
 
-    if requirement.minimum_course_level is not None:
-        return {
-            "status": "UNKNOWN",
-            "reason": (
-                f"The requirement specifies a course level of "
-                f"{requirement.minimum_course_level}, but the student's "
-                f"academic result does not include course-level information."
-            ),
-        }
-
-    # If the university publishes a WAEC minimum grade,
-    # compare it directly with the student's WAEC grade.
     if requirement.minimum_grade is not None:
         grade_result = meets_waec_minimum_grade(
             student_result.grade,
@@ -62,37 +47,71 @@ def match_subject_requirement(student_result, requirement):
         )
 
         if grade_result is True:
-            return {
+            checks.append({
                 "status": "SATISFIED",
                 "reason": (
-                    f"The student's grade of {student_result.grade} "
-                    f"meets the minimum grade of "
+                    f"Grade {student_result.grade} meets "
+                    f"the minimum grade of "
                     f"{requirement.minimum_grade}."
                 ),
-            }
+            })
 
-        if grade_result is False:
-            return {
+        elif grade_result is False:
+            checks.append({
                 "status": "NOT_SATISFIED",
                 "reason": (
-                    f"The student's grade of {student_result.grade} "
-                    f"does not meet the minimum grade of "
+                    f"Grade {student_result.grade} does not "
+                    f"meet the minimum grade of "
                     f"{requirement.minimum_grade}."
                 ),
-            }
+            })
 
-        return {
+        else:
+            checks.append({
+                "status": "UNKNOWN",
+                "reason": "Unable to compare the WAEC grades.",
+            })
+
+    if requirement.minimum_years is not None:
+        checks.append({
             "status": "UNKNOWN",
             "reason": (
-                "The student grade or minimum grade could not "
-                "be interpreted as a valid WAEC grade."
+                f"The requirement specifies at least "
+                f"{requirement.minimum_years} years of "
+                f"{requirement.subject}, but coursework "
+                f"duration is not available."
             ),
+        })
+
+    if requirement.minimum_course_level is not None:
+        checks.append({
+            "status": "UNKNOWN",
+            "reason": (
+                f"The requirement specifies "
+                f"{requirement.minimum_course_level}, "
+                f"but course-level information is not available."
+            ),
+        })
+
+    if not checks:
+        return {
+            "status": "UNKNOWN",
+            "reason": "No evaluable admission criteria are available.",
         }
 
+    statuses = [check["status"] for check in checks]
+
+    if "NOT_SATISFIED" in statuses:
+        overall_status = "NOT_SATISFIED"
+    elif "UNKNOWN" in statuses:
+        overall_status = "UNKNOWN"
+    else:
+        overall_status = "SATISFIED"
+
     return {
-        "status": "UNKNOWN",
-        "reason": (
-            "There is not enough information to evaluate "
-            "this requirement."
+        "status": overall_status,
+        "reason": " ".join(
+            check["reason"] for check in checks
         ),
+        "checks": checks,
     }

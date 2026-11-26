@@ -1,4 +1,6 @@
+import json
 from datetime import date
+from pathlib import Path
 
 from app.database import SessionLocal
 from app.models import (
@@ -10,70 +12,164 @@ from app.models import (
 )
 
 
+DATA_PATH = (
+    Path(__file__).resolve().parent
+    / "data"
+    / "admission_requirements.json"
+)
+
+
 def seed_admission_requirements():
     db = SessionLocal()
 
+    created = 0
+    updated = 0
+
     try:
-        university = (
-            db.query(University)
-            .filter(
-                University.name
-                == "University of Illinois Urbana-Champaign"
+        with DATA_PATH.open(encoding="utf-8") as file:
+            entries = json.load(file)
+
+        for entry in entries:
+
+            university = (
+                db.query(University)
+                .filter(
+                    University.name == entry["university"],
+                    University.country == "United States",
+                )
+                .one_or_none()
             )
-            .first()
-        )
 
-        if university is None:
-            print("UIUC was not found.")
-            return
+            if university is None:
+                raise ValueError(
+                    f"University not found: {entry['university']}"
+                )
 
-        program = (
-            db.query(Program)
-            .filter(
-                Program.university_id == university.id,
-                Program.name == "Computer Science",
+            program_id = None
+
+            if entry.get("program") is not None:
+
+                program = (
+                    db.query(Program)
+                    .filter(
+                        Program.university_id == university.id,
+                        Program.name == entry["program"],
+                    )
+                    .one_or_none()
+                )
+
+                if program is None:
+                    raise ValueError(
+                        f"Program not found: {entry['program']}"
+                    )
+
+                program_id = program.id
+
+            requirement = (
+                db.query(AdmissionRequirement)
+                .filter(
+                    AdmissionRequirement.university_id
+                    == university.id,
+                    AdmissionRequirement.program_id
+                    == program_id,
+                    AdmissionRequirement.applicant_country
+                    == entry["applicant_country"],
+                    AdmissionRequirement.credential_type
+                    == entry.get("credential_type"),
+                    AdmissionRequirement.requirement_type
+                    == entry["requirement_type"],
+                )
+                .one_or_none()
             )
-            .first()
-        )
 
-        if program is None:
-            print("Computer Science program was not found.")
-            return
+            if requirement is None:
 
-        admission_requirement = AdmissionRequirement(
-            university_id=university.id,
-            program_id=program.id,
-            applicant_country="Nigeria",
-            credential_type=None,
-            requirement_type="coursework",
-        )
+                requirement = AdmissionRequirement(
+                    university_id=university.id,
+                    program_id=program_id,
+                    applicant_country=entry["applicant_country"],
+                    credential_type=entry.get("credential_type"),
+                    requirement_type=entry["requirement_type"],
+                )
 
-        db.add(admission_requirement)
-        db.flush()
+                db.add(requirement)
+                db.flush()
 
-        math_requirement = AdmissionSubjectRequirement(
-            admission_requirement_id=admission_requirement.id,
-            subject="Mathematics",
-            requirement_level="required",
-            minimum_grade=None,
-            minimum_years=3.5,
-            minimum_course_level="Trigonometry or higher",
-        )
+                created += 1
 
-        db.add(math_requirement)
+            else:
+                updated += 1
 
-        source = AdmissionSource(
-            admission_requirement_id=admission_requirement.id,
-            source_url="https://www.admissions.illinois.edu/first-year-requirements/",
-            source_title="UIUC First-Year Requirements",
-            verified_date=date.today(),
-        )
+            requirement.minimum_credit_count = entry.get(
+                "minimum_credit_count"
+            )
 
-        db.add(source)
+            requirement.minimum_credit_grade = entry.get(
+                "minimum_credit_grade"
+            )
+
+            requirement.minimum_gpa = entry.get(
+                "minimum_gpa"
+            )
+
+            requirement.gpa_scale = entry.get(
+                "gpa_scale"
+            )
+
+            requirement.minimum_percentage = entry.get(
+                "minimum_percentage"
+            )
+
+            # Replace the managed requirements and sources
+            # with the current dataset contents.
+
+            requirement.subject_requirements.clear()
+            requirement.sources.clear()
+
+            db.flush()
+
+            for subject in entry.get("subject_requirements", []):
+
+                requirement.subject_requirements.append(
+                    AdmissionSubjectRequirement(
+                        subject=subject["subject"],
+                        requirement_level=subject["requirement_level"],
+                        minimum_grade=subject.get("minimum_grade"),
+                        minimum_years=subject.get("minimum_years"),
+                        minimum_course_level=subject.get(
+                            "minimum_course_level"
+                        ),
+                    )
+                )
+
+            for source in entry["sources"]:
+
+                requirement.sources.append(
+                    AdmissionSource(
+                        source_title=source["source_title"],
+                        source_url=source["source_url"],
+                        verified_date=date.fromisoformat(
+                            source["verified_date"]
+                        ),
+                        evidence_text=source.get("evidence_text"),
+                        admission_cycle=source.get("admission_cycle"),
+                    )
+                )
+
+            print(
+                f"Processed: {university.name} | "
+                f"{entry.get('program') or 'University-wide'}"
+            )
 
         db.commit()
 
-        print("UIUC Computer Science admission requirement seeded successfully.")
+        print("\nAdmission requirements seeded successfully.")
+        print(f"Requirements created: {created}")
+        print(f"Requirements updated: {updated}")
+
+    except Exception:
+        db.rollback()
+        raise
 
     finally:
         db.close()

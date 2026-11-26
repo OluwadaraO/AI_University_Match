@@ -1,0 +1,23 @@
+[
+  {
+    "name": "University of Illinois Urbana-Champaign",
+    "country": "United States",
+    "programs": [
+      "Computer Science"
+    ]
+  },
+  {
+    "name": "West Virginia University",
+    "country": "United States",
+    "programs": [
+      "Computer Science"
+    ]
+  },
+  {
+    "name": "Western Kentucky University",
+    "country": "United States",
+    "programs": [
+      "Computer Science"
+    ]
+  }
+]

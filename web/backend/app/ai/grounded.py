@@ -1,6 +1,4 @@
-from app.ai.client import client
-
-MODEL = "gemini-3.8-flash"
+from app.ai.client import client, MODEL
 
 
 def get_grounded_assessment(
